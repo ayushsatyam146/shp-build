@@ -17,7 +17,7 @@ import (
 	shpgit "github.com/shipwright-io/build/pkg/git"
 )
 
-var _ = Describe("For a Kubernetes cluster with Tekton and build installed", func() {
+var _ = Describe("For a Kubernetes cluster with Tekton and build installed", Label("kubernetes", "tekton", "build"), func() {
 	var (
 		testID string
 		err    error
@@ -45,7 +45,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		}
 	})
 
-	Context("when a Buildah build is defined that is using shipwright-managed push", func() {
+	Context("when a Buildah build is defined that is using shipwright-managed push", Label("buildah", "shipwright", "managed-push"), func() {
 
 		BeforeEach(func() {
 			testID = generateTestID("buildah")
@@ -58,7 +58,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			)
 		})
 
-		It("successfully runs a build and surface results to BuildRun", func() {
+		It("successfully runs a build and surface results to BuildRun", Label("buildrun"), func() {
 			buildRun, err = buildRunTestData(testBuild.Namespace, testID, "samples/v1beta1/buildrun/buildrun_buildah_cr.yaml")
 			Expect(err).ToNot(HaveOccurred(), "Error retrieving buildrun test data")
 			appendRegistryInsecureParamValue(build, buildRun)
@@ -69,7 +69,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		})
 	})
 
-	Context("when a Buildah build is defined that is using strategy-managed push", func() {
+	Context("when a Buildah build is defined that is using strategy-managed push", Label("buildah", "strategy", "managed-push"), func() {
 
 		BeforeEach(func() {
 			testID = generateTestID("buildah")
@@ -82,7 +82,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			)
 		})
 
-		It("successfully runs a build and surface results to BuildRun", func() {
+		It("successfully runs a build and surface results to BuildRun", Label("buildrun"), func() {
 			buildRun, err = buildRunTestData(testBuild.Namespace, testID, "samples/v1beta1/buildrun/buildrun_buildah_cr.yaml")
 			Expect(err).ToNot(HaveOccurred(), "Error retrieving buildrun test data")
 			appendRegistryInsecureParamValue(build, buildRun)
@@ -93,7 +93,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		})
 	})
 
-	Context("when a Buildah build with a contextDir and a custom Dockerfile name is defined", func() {
+	Context("when a Buildah build with a contextDir and a custom Dockerfile name is defined", Label("buildah", "contextdir", "custom-dockerfile"), func() {
 
 		BeforeEach(func() {
 			testID = generateTestID("buildah-custom-context-dockerfile")
@@ -106,7 +106,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			)
 		})
 
-		It("successfully runs a build", func() {
+		It("successfully runs a build", Label("buildrun"), func() {
 			buildRun, err = buildRunTestData(testBuild.Namespace, testID, "test/data/v1beta1/buildrun_buildah_cr_custom_context+dockerfile.yaml")
 			Expect(err).ToNot(HaveOccurred(), "Error retrieving buildrun test data")
 			appendRegistryInsecureParamValue(build, buildRun)
@@ -116,7 +116,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		})
 	})
 
-	Context("when a heroku Buildpacks build is defined using a cluster strategy", func() {
+	Context("when a heroku Buildpacks build is defined using a cluster strategy", Label("heroku", "buildpacks", "cluster-strategy"), func() {
 
 		BeforeEach(func() {
 			testID = generateTestID("buildpacks-v3-heroku")
@@ -129,7 +129,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			)
 		})
 
-		It("successfully runs a build", func() {
+		It("successfully runs a build", Label("buildrun"), func() {
 			buildRun, err = buildRunTestData(testBuild.Namespace, testID, "samples/v1beta1/buildrun/buildrun_buildpacks-v3-heroku_cr.yaml")
 			Expect(err).ToNot(HaveOccurred(), "Error retrieving buildrun test data")
 
@@ -138,7 +138,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		})
 	})
 
-	Context("when a heroku Buildpacks build is defined using a namespaced strategy", func() {
+	Context("when a heroku Buildpacks build is defined using a namespaced strategy", Label("heroku", "buildpacks", "namespaced-strategy"), func() {
 		var buildStrategy *buildv1beta1.BuildStrategy
 
 		BeforeEach(func() {
@@ -158,7 +158,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			)
 		})
 
-		It("successfully runs a build and surface results to BuildRun", func() {
+		It("successfully runs a build and surface results to BuildRun", Label("buildrun"), func() {
 			buildRun, err = buildRunTestData(testBuild.Namespace, testID, "samples/v1beta1/buildrun/buildrun_buildpacks-v3-heroku_namespaced_cr.yaml")
 			Expect(err).ToNot(HaveOccurred())
 
@@ -173,8 +173,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		})
 	})
 
-	Context("when a Buildpacks v3 build is defined using a cluster strategy", func() {
-
+	Context("when a Buildpacks v3 build is defined using a cluster strategy", Label("buildpacks", "cluster-strategy"), func() {
 		BeforeEach(func() {
 			testID = generateTestID("buildpacks-v3")
 
@@ -186,7 +185,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			)
 		})
 
-		It("successfully runs a build and surface results to BuildRun", func() {
+		It("successfully runs a build and surface results to BuildRun", Label("buildrun"), func() {
 			buildRun, err = buildRunTestData(testBuild.Namespace, testID, "samples/v1beta1/buildrun/buildrun_buildpacks-v3_cr.yaml")
 			Expect(err).ToNot(HaveOccurred(), "Error retrieving buildrun test data")
 
@@ -196,7 +195,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		})
 	})
 
-	Context("when a Buildpacks v3 build is defined using a namespaced strategy", func() {
+	Context("when a Buildpacks v3 build is defined using a namespaced strategy", Label("buildpacks", "namespaced-strategy"), func() {
 		var buildStrategy *buildv1beta1.BuildStrategy
 
 		BeforeEach(func() {
@@ -216,7 +215,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			)
 		})
 
-		It("successfully runs a build", func() {
+		It("successfully runs a build", Label("buildrun"), func() {
 			buildRun, err = buildRunTestData(testBuild.Namespace, testID, "samples/v1beta1/buildrun/buildrun_buildpacks-v3_namespaced_cr.yaml")
 			Expect(err).ToNot(HaveOccurred(), "Error retrieving buildrun test data")
 
@@ -230,8 +229,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		})
 	})
 
-	Context("when a Buildpacks v3 build is defined for a php runtime", func() {
-
+	Context("when a Buildpacks v3 build is defined for a php runtime", Label("buildpacks", "php", "runtime"), func() {
 		BeforeEach(func() {
 			testID = generateTestID("buildpacks-v3-php")
 
@@ -243,7 +241,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			)
 		})
 
-		It("successfully runs a build", func() {
+		It("successfully runs a build", Label("buildrun"), func() {
 			buildRun, err = buildRunTestData(testBuild.Namespace, testID, "test/data/v1beta1/buildrun_buildpacks-v3_php_cr.yaml")
 			Expect(err).ToNot(HaveOccurred(), "Error retrieving buildrun test data")
 
@@ -252,7 +250,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		})
 	})
 
-	Context("when a Buildpacks v3 build is defined for a ruby runtime", func() {
+	Context("when a Buildpacks v3 build is defined for a ruby runtime", Label("buildpacks", "ruby", "runtime"), func() {
 
 		BeforeEach(func() {
 			testID = generateTestID("buildpacks-v3-ruby")
@@ -265,7 +263,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			)
 		})
 
-		It("successfully runs a build", func() {
+		It("successfully runs a build", Label("buildrun"), func() {
 			buildRun, err = buildRunTestData(testBuild.Namespace, testID, "test/data/v1beta1/buildrun_buildpacks-v3_ruby_cr.yaml")
 			Expect(err).ToNot(HaveOccurred())
 
@@ -274,7 +272,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		})
 	})
 
-	Context("when a Buildpacks v3 build is defined for a golang runtime", func() {
+	Context("when a Buildpacks v3 build is defined for a golang runtime", Label("buildpacks", "golang", "runtime"), func() {
 
 		BeforeEach(func() {
 			testID = generateTestID("buildpacks-v3-golang")
@@ -287,7 +285,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			)
 		})
 
-		It("successfully runs a build", func() {
+		It("successfully runs a build", Label("buildrun"), func() {
 			buildRun, err = buildRunTestData(testBuild.Namespace, testID, "test/data/v1beta1/buildrun_buildpacks-v3_golang_cr.yaml")
 			Expect(err).ToNot(HaveOccurred(), "Error retrieving buildrun test data")
 
@@ -296,7 +294,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		})
 	})
 
-	Context("when a Buildpacks v3 build is defined for a golang runtime with `BP_GO_TARGETS` env", func() {
+	Context("when a Buildpacks v3 build is defined for a golang runtime with `BP_GO_TARGETS` env", Label("buildpacks", "golang", "runtime", "with-targets"), func() {
 		BeforeEach(func() {
 			testID = generateTestID("buildpacks-v3-golang")
 
@@ -308,7 +306,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			)
 		})
 
-		It("successfully runs a build", func() {
+		It("successfully runs a build", Label("buildrun"), func() {
 			buildRun, err = buildRunTestData(testBuild.Namespace, testID, "test/data/v1beta1/buildrun_buildpacks-v3_golang_cr.yaml")
 			Expect(err).ToNot(HaveOccurred(), "Error retrieving buildrun test data")
 
@@ -317,8 +315,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		})
 	})
 
-	Context("when a build uses the build-run-deletion annotation", func() {
-
+	Context("when a build uses the build-run-deletion annotation", Label("build-run-deletion"), func() {
 		BeforeEach(func() {
 			testID = generateTestID("buildpacks-v3-golang")
 
@@ -330,7 +327,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			)
 		})
 
-		It("successfully deletes the BuildRun after the Build is deleted", func() {
+		It("successfully deletes the BuildRun after the Build is deleted", Label("buildrun", "delete", "build-run-deletion"), func() {
 			By("running a build and expecting it to succeed")
 			buildRun, err = buildRunTestData(testBuild.Namespace, testID, "test/data/v1beta1/buildrun_buildpacks-v3_golang_cr.yaml")
 			Expect(err).ToNot(HaveOccurred(), "Error retrieving buildrun test data")
@@ -354,7 +351,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		})
 	})
 
-	Context("when a Buildpacks v3 build is defined for a java runtime", func() {
+	Context("when a Buildpacks v3 build is defined for a java runtime", Label("buildpacks", "java", "runtime"), func() {
 
 		BeforeEach(func() {
 			testID = generateTestID("buildpacks-v3-java")
@@ -367,7 +364,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			)
 		})
 
-		It("successfully runs a build", func() {
+		It("successfully runs a build", Label("buildrun"), func() {
 			buildRun, err = buildRunTestData(testBuild.Namespace, testID, "test/data/v1beta1/buildrun_buildpacks-v3_java_cr.yaml")
 			Expect(err).ToNot(HaveOccurred())
 
@@ -376,7 +373,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		})
 	})
 
-	Context("when a Kaniko build is defined to use public GitHub", func() {
+	Context("when a Kaniko build is defined to use public GitHub", Label("kaniko", "github", "public"), func() {
 
 		BeforeEach(func() {
 			testID = generateTestID("kaniko")
@@ -389,7 +386,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			)
 		})
 
-		It("successfully runs a build and surface results to BuildRun", func() {
+		It("successfully runs a build and surface results to BuildRun", Label("buildrun"), func() {
 			buildRun, err = buildRunTestData(testBuild.Namespace, testID, "samples/v1beta1/buildrun/buildrun_kaniko_cr.yaml")
 			Expect(err).ToNot(HaveOccurred())
 
@@ -399,8 +396,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		})
 	})
 
-	Context("when a Kaniko build with a Dockerfile that requires advanced permissions is defined", func() {
-
+	Context("when a Kaniko build with a Dockerfile that requires advanced permissions is defined", Label("kaniko", "advanced", "dockerfile"), func() {
 		BeforeEach(func() {
 			testID = generateTestID("kaniko-advanced-dockerfile")
 
@@ -412,7 +408,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			)
 		})
 
-		It("successfully runs a build", func() {
+		It("successfully runs a build", Label("build", "success"), func() {
 			buildRun, err = buildRunTestData(testBuild.Namespace, testID, "test/data/v1beta1/buildrun_kaniko_cr_advanced_dockerfile.yaml")
 			Expect(err).ToNot(HaveOccurred(), "Error retrieving buildrun test data")
 
@@ -421,8 +417,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		})
 	})
 
-	Context("when a Kaniko build with a contextDir and a custom Dockerfile name is defined", func() {
-
+	Context("when a Kaniko build with a contextDir and a custom Dockerfile name is defined", Label("kaniko", "contextdir", "custom-dockerfile"), func() {
 		BeforeEach(func() {
 			testID = generateTestID("kaniko-custom-context-dockerfile")
 
@@ -434,7 +429,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			)
 		})
 
-		It("successfully runs a build", func() {
+		It("successfully runs a build", Label("build", "success"), func() {
 			buildRun, err = buildRunTestData(testBuild.Namespace, testID, "test/data/v1beta1/buildrun_kaniko_cr_custom_context+dockerfile.yaml")
 			Expect(err).ToNot(HaveOccurred())
 
@@ -443,8 +438,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		})
 	})
 
-	Context("when a Buildkit build with a contextDir and a path to a Dockerfile is defined", func() {
-
+	Context("when a Buildkit build with a contextDir and a path to a Dockerfile is defined", Label("buildkit", "contextdir", "dockerfile"), func() {
 		BeforeEach(func() {
 			testID = generateTestID("buildkit-custom-context")
 
@@ -456,7 +450,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			)
 		})
 
-		It("successfully runs a build and surface results to BuildRun", func() {
+		It("successfully runs a build and surface results to BuildRun", Label("buildrun"), func() {
 			buildRun, err = buildRunTestData(testBuild.Namespace, testID, "samples/v1beta1/buildrun/buildrun_buildkit_cr.yaml")
 			Expect(err).ToNot(HaveOccurred())
 
@@ -475,8 +469,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		})
 	})
 
-	Context("when a s2i build is defined", func() {
-
+	Context("when a s2i build is defined", Label("s2i"), func() {
 		BeforeEach(func() {
 			testID = generateTestID("s2i")
 
@@ -498,16 +491,14 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		})
 	})
 
-	Context("when a private source repository is used", func() {
-
+	Context("when a private source repository is used", Label("private", "source"), func() {
 		BeforeEach(func() {
 			if os.Getenv(EnvVarEnablePrivateRepos) != "true" {
 				Skip("Skipping test cases that use a private source repository")
 			}
 		})
 
-		Context("when a Buildah build is defined to use a private GitHub repository", func() {
-
+		Context("when a Buildah build is defined to use a private GitHub repository", Label("buildah", "github", "private"), func() {
 			BeforeEach(func() {
 				testID = generateTestID("private-github-buildah")
 
@@ -519,7 +510,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 				)
 			})
 
-			It("successfully runs a build", func() {
+			It("successfully runs a build", Label("build"), func() {
 				buildRun, err = buildRunTestData(testBuild.Namespace, testID, "samples/v1beta1/buildrun/buildrun_buildah_cr.yaml")
 				Expect(err).ToNot(HaveOccurred(), "Error retrieving buildrun test data")
 
@@ -528,8 +519,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			})
 		})
 
-		Context("when a Buildah build is defined to use a private GitLab repository", func() {
-
+		Context("when a Buildah build is defined to use a private GitLab repository", Label("buildah", "gitlab", "private"), func() {
 			BeforeEach(func() {
 				testID = generateTestID("private-gitlab-buildah")
 
@@ -541,7 +531,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 				)
 			})
 
-			It("successfully runs a build", func() {
+			It("successfully runs a build", Label("build"), func() {
 				buildRun, err = buildRunTestData(testBuild.Namespace, testID, "samples/v1beta1/buildrun/buildrun_buildah_cr.yaml")
 				Expect(err).ToNot(HaveOccurred())
 
@@ -550,8 +540,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			})
 		})
 
-		Context("when a Kaniko build is defined to use a private GitHub repository", func() {
-
+		Context("when a Kaniko build is defined to use a private GitHub repository", Label("kaniko", "github", "private"), func() {
 			BeforeEach(func() {
 				testID = generateTestID("private-github-kaniko")
 
@@ -563,7 +552,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 				)
 			})
 
-			It("successfully runs a build", func() {
+			It("successfully runs a build", Label("build"), func() {
 				buildRun, err = buildRunTestData(testBuild.Namespace, testID, "samples/v1beta1/buildrun/buildrun_kaniko_cr.yaml")
 				Expect(err).ToNot(HaveOccurred(), "Error retrieving buildrun test data")
 
@@ -572,7 +561,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			})
 		})
 
-		Context("when a Kaniko build is defined to use a private GitLab repository", func() {
+		Context("when a Kaniko build is defined to use a private GitLab repository", Label("kaniko", "gitlab", "private"), func() {
 
 			BeforeEach(func() {
 				testID = generateTestID("private-gitlab-kaniko")
@@ -585,7 +574,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 				)
 			})
 
-			It("successfully runs a build", func() {
+			It("successfully runs a build", Label("build"), func() {
 				buildRun, err = buildRunTestData(testBuild.Namespace, testID, "samples/v1beta1/buildrun/buildrun_kaniko_cr.yaml")
 				Expect(err).ToNot(HaveOccurred())
 
@@ -594,7 +583,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			})
 		})
 
-		Context("when a s2i build is defined to use a private GitHub repository", func() {
+		Context("when a s2i build is defined to use a private GitHub repository", Label("s2i", "github", "private"), func() {
 
 			BeforeEach(func() {
 				testID = generateTestID("private-github-s2i")
@@ -607,7 +596,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 				)
 			})
 
-			It("successfully runs a build", func() {
+			It("successfully runs a build", Label("build"), func() {
 				buildRun, err = buildRunTestData(testBuild.Namespace, testID, "samples/v1beta1/buildrun/buildrun_source-to-image_cr.yaml")
 				Expect(err).ToNot(HaveOccurred(), "Error retrieving buildrun test data")
 
@@ -617,8 +606,8 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		})
 	})
 
-	Context("when a s2i build uses a non-existent git repository as source", func() {
-		It("fails because of prompted authentication which surfaces the to the BuildRun", func() {
+	Context("when a s2i build is defined to use a private GitLab repository", Label("s2i", "gitlab", "private"), func() {
+		It("fails because of prompted authentication which surfaces the to the BuildRun", Label("authentication", "buildrun"), func() {
 			testID = generateTestID("s2i-failing")
 
 			build = createBuild(

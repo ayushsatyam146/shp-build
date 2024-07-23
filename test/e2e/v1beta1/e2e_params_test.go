@@ -15,7 +15,7 @@ import (
 	"k8s.io/utils/pointer"
 )
 
-var _ = Describe("For a Kubernetes cluster with Tekton and build installed", func() {
+var _ = Describe("For a Kubernetes cluster with Tekton and build installed", Label( "kubernetes-cluster", "tekton", "build"), func() {
 	var (
 		testID string
 		err    error
@@ -27,7 +27,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		secret        *corev1.Secret
 	)
 
-	AfterEach(func() {
+	AfterEach(Label("cleanup"), func() {
 		if CurrentSpecReport().Failed() {
 			printTestFailureDebugInfo(testBuild, testBuild.Namespace, testID)
 		} else if buildRun != nil {
@@ -60,7 +60,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		}
 	})
 
-	Context("when using a cluster build strategy is used that uses a lot parameters", func() {
+	Context("when using a cluster build strategy is used that uses a lot parameters", Label("cluster-build-strategy", "many-parameters"), func() {
 		BeforeEach(func() {
 			buildStrategy, err = testBuild.Catalog.LoadBuildStrategyFromBytes([]byte(test.BuildStrategyWithParameterVerification))
 			Expect(err).ToNot(HaveOccurred())
@@ -68,7 +68,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			Expect(err).ToNot(HaveOccurred())
 		})
 
-		Context("when a secret and a configmap are in place with suitable values", func() {
+		Context("when a secret and a configmap are in place with suitable values", Label("secret-and-configmap", "setup"), func() {
 			BeforeEach(func() {
 				// prepare a ConfigMap
 				configMap = testBuild.Catalog.ConfigMapWithData("a-configmap", testBuild.Namespace, map[string]string{
@@ -87,7 +87,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 				Expect(err).ToNot(HaveOccurred())
 			})
 
-			Context("when a Build is in place that sets some of the parameters", func() {
+			Context("when a Build is in place that sets some of the parameters", Label("build-parameters", "setup"), func() {
 				BeforeEach(func() {
 					testID = generateTestID("params")
 
@@ -108,7 +108,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 					Expect(err).ToNot(HaveOccurred())
 				})
 
-				It("correctly runs a BuildRun that passes the remaining parameters", func() {
+				It("correctly runs a BuildRun that passes the remaining parameters", Label("buildrun-with-parameters", "buildrun", "parameter-passing", "build-strategy"), func() {
 					buildRun, err = NewBuildRunPrototype().
 						ForBuild(build).
 						Name(testID).

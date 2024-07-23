@@ -13,7 +13,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-var _ = Describe("User RBAC for Shipwright", func() {
+var _ = Describe("User RBAC for Shipwright", Label("user-rbac", "shipwright"), func() {
 
 	var ctx context.Context
 
@@ -21,7 +21,7 @@ var _ = Describe("User RBAC for Shipwright", func() {
 		ctx = context.Background()
 	})
 
-	It("should install an aggregated edit role for developers", func() {
+	It("should install an aggregated edit role for developers", Label("aggregated-edit-role", "developer-role", "permissions"), func() {
 		editRole, err := testBuild.Clientset.RbacV1().ClusterRoles().Get(ctx, "shipwright-build-aggregate-edit", metav1.GetOptions{})
 		Expect(err).NotTo(HaveOccurred())
 		expectedAggregates := []string{
@@ -52,7 +52,7 @@ var _ = Describe("User RBAC for Shipwright", func() {
 		}
 	})
 
-	It("should install an aggregated view role for all users", func() {
+	It("should install an aggregated view role for all users", Label("aggregated-view-role", "all-users", "view-permissions"), func() {
 		viewRole, err := testBuild.Clientset.RbacV1().ClusterRoles().Get(ctx, "shipwright-build-aggregate-view", metav1.GetOptions{})
 		Expect(err).NotTo(HaveOccurred())
 

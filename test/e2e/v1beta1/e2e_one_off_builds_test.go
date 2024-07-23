@@ -16,7 +16,7 @@ import (
 	buildv1beta1 "github.com/shipwright-io/build/pkg/apis/build/v1beta1"
 )
 
-var _ = Describe("Using One-Off Builds", func() {
+var _ = Describe("Using One-Off Builds", Label("one-off-builds", "build"), func() {
 
 	insecure := false
 	value, found := os.LookupEnv(EnvVarImageRepoInsecure)
@@ -33,7 +33,7 @@ var _ = Describe("Using One-Off Builds", func() {
 		buildRun *buildv1beta1.BuildRun
 	)
 
-	AfterEach(func() {
+	AfterEach( Label("cleanup"), func() {
 		if CurrentSpecReport().Failed() {
 			printTestFailureDebugInfo(testBuild, testBuild.Namespace, testID)
 
@@ -47,7 +47,7 @@ var _ = Describe("Using One-Off Builds", func() {
 		}
 	})
 
-	Context("Embed BuildSpec in BuildRun", func() {
+	Context("Embed BuildSpec in BuildRun", Label("embed-buildspec", "buildrun"), func() {
 		var outputImage name.Reference
 
 		BeforeEach(func() {
@@ -61,7 +61,7 @@ var _ = Describe("Using One-Off Builds", func() {
 			Expect(err).ToNot(HaveOccurred())
 		})
 
-		It("should build an image using Buildpacks and a Git source", func() {
+		It("should build an image using Buildpacks and a Git source", Label("buildpacks", "git-source", "build-strategy"), func() {
 			buildRun, err = NewBuildRunPrototype().
 				Namespace(testBuild.Namespace).
 				Name(testID).
@@ -80,7 +80,7 @@ var _ = Describe("Using One-Off Builds", func() {
 			validateBuildRunToSucceed(testBuild, buildRun)
 		})
 
-		It("should build an image using Buildah and a Git source", func() {
+		It("should build an image using Buildah and a Git source", Label("buildah", "git-source", "build-strategy"), func() {
 			buildRun, err = NewBuildRunPrototype().
 				Namespace(testBuild.Namespace).
 				Name(testID).
@@ -101,7 +101,7 @@ var _ = Describe("Using One-Off Builds", func() {
 			validateBuildRunToSucceed(testBuild, buildRun)
 		})
 
-		It("should build an image using Buildpacks and a ociArtifact source", func() {
+		It("should build an image using Buildpacks and a ociArtifact source", Label("buildpacks", "oci-artifact", "build-strategy"), func() {
 			buildRun, err = NewBuildRunPrototype().
 				Namespace(testBuild.Namespace).
 				Name(testID).
