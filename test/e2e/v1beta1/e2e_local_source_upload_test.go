@@ -16,7 +16,7 @@ import (
 	utils "github.com/shipwright-io/build/test/utils/v1beta1"
 )
 
-var _ = Describe("For a Kubernetes cluster with Tekton and build installed", func() {
+var _ = Describe("For a Kubernetes cluster with Tekton and build installed",Label("kubernetes", "tekton", "e2e", "build"), func() {
 	var (
 		testID   string
 		build    *buildv1beta1.Build
@@ -35,7 +35,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 		}
 	})
 
-	Context("when LocalCopy BuildSource is defined", func() {
+	Context("when LocalCopy BuildSource is defined", Label("localcopy", "buildsource"), func() {
 		BeforeEach(func() {
 			testID = generateTestID("local-copy")
 			build = createBuild(
@@ -45,7 +45,7 @@ var _ = Describe("For a Kubernetes cluster with Tekton and build installed", fun
 			)
 		})
 
-		It("should generate LocalCopy TaskRun, using the waiter", func() {
+		It("should generate LocalCopy TaskRun, using the waiter", Label("taskrun", "localcopy", "waiter"), func() {
 			var err error
 			buildRun, err = buildRunTestData(
 				testBuild.Namespace,
