@@ -1,10 +1,12 @@
-FROM registry.access.redhat.com/ubi9/go-toolset@sha256:6402ad7886fb3bdaa950c89bdf338f8dbedde54c16bddb1157ebb8691b2def50 AS builder
+FROM registry.access.redhat.com/ubi9/go-toolset@sha256:42c9557a27ecb3909796ad47170ad6c06a023fde89588526cb8f2b0e4e6bae84 AS builder
+USER root
 
+WORKDIR /workspace
 COPY . .
 
 RUN CGO_ENABLED=0 GO111MODULE=on go build -a -mod=vendor -ldflags="-s -w" -o openshift-builds-waiter ./cmd/waiter
 
-FROM registry.access.redhat.com/ubi9-minimal@sha256:14f14e03d68f7fd5f2b18a13478b6b127c341b346c86b6e0b886ed2b7573b8e0
+FROM registry.access.redhat.com/ubi9-minimal@sha256:30bbd445046a3a63f5f5557a3c67dee74e3c8e7855eb0347630b020f3689823f
 
 RUN \
   microdnf --assumeyes --nodocs install tar && \
@@ -15,10 +17,10 @@ RUN \
   mkdir /.docker && \
   chown 1000:1000 /.docker
 
-COPY --from=builder /opt/app-root/src/openshift-builds-waiter /ko-app/waiter
+COPY --from=builder /workspace/openshift-builds-waiter /ko-app/git
 COPY LICENSE /licenses/
 
-ENTRYPOINT ["/ko-app/waiter"]
+ENTRYPOINT ["./openshift-builds-waiter"]
 
 LABEL \
     com.redhat.component="openshift-builds-waiter" \
