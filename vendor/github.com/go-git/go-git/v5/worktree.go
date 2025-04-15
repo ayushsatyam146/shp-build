@@ -425,9 +425,8 @@ func (w *Worktree) resetIndex(t *object.Tree, dirs []string, files []string) err
 }
 
 func inFiles(files []string, v string) bool {
-	v = filepath.Clean(v)
 	for _, s := range files {
-		if filepath.Clean(s) == v {
+		if s == v {
 			return true
 		}
 	}
